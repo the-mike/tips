@@ -1,11 +1,11 @@
 ## git-tips
 > Collection of `git-tips`, want to add your tips? Checkout [contributing.md](./contributing.md)
 
-[English](http://git.io/git-tips) | [中文](https://github.com/521xueweihan/git-tips)
+[English](http://git.io/git-tips) | [中文](https://github.com/521xueweihan/git-tips) | [Русский](https://github.com/Imangazaliev/git-tips)
 
 ### __Tools:__
 
-* [git-tip](https://www.npmjs.com/package/git-tip) - A handy CLI to make optimum use of these tips.
+* [git-tip](https://www.npmjs.com/package/git-tip) - A handy CLI to make optimum use of these tips. ([Here in Docker container](https://github.com/djoudi5/docker-git-tip))
 
 P.S: All these commands are tested on `git version 2.7.4 (Apple Git-66)`.
 
@@ -13,7 +13,8 @@ P.S: All these commands are tested on `git version 2.7.4 (Apple Git-66)`.
 <!-- Don’t remove or change the comment above – that can break automatic updates. -->
 * [Everyday Git in twenty commands or so](#everyday-git-in-twenty-commands-or-so)
 * [Show helpful guides that come with Git](#show-helpful-guides-that-come-with-git)
-* [Overwrite pull](#overwrite-pull)
+* [Search change by content](#search-change-by-content)
+* [Sync with remote, overwrite local changes](#sync-with-remote-overwrite-local-changes)
 * [List of all files till a commit](#list-of-all-files-till-a-commit)
 * [Git reset first commit](#git-reset-first-commit)
 * [List all the conflicted files](#list-all-the-conflicted-files)
@@ -49,7 +50,10 @@ P.S: All these commands are tested on `git version 2.7.4 (Apple Git-66)`.
 * [Find out branches containing commit-hash](#find-out-branches-containing-commit-hash)
 * [Git Aliases](#git-aliases)
 * [Saving current state of tracked files without commiting](#saving-current-state-of-tracked-files-without-commiting)
+* [Saving current state of unstaged changes to tracked files](#saving-current-state-of-unstaged-changes-to-tracked-files)
 * [Saving current state including untracked files](#saving-current-state-including-untracked-files)
+* [Saving current state with message](#saving-current-state-with-message)
+* [Saving current state of all files (ignored, untracked, and tracked)](#saving-current-state-of-all-files-ignored-untracked-and-tracked)
 * [Show list of all saved stashes](#show-list-of-all-saved-stashes)
 * [Apply any stash without deleting from the stashed list](#apply-any-stash-without-deleting-from-the-stashed-list)
 * [Apply last stashed state and delete it from stashed list](#apply-last-stashed-state-and-delete-it-from-stashed-list)
@@ -104,6 +108,7 @@ P.S: All these commands are tested on `git version 2.7.4 (Apple Git-66)`.
 * [List ignored files.](#list-ignored-files)
 * [Status of ignored files.](#status-of-ignored-files)
 * [Commits in Branch1 that are not in Branch2](#commits-in-branch1-that-are-not-in-branch2)
+* [List n last commits](#list-n-last-commits)
 * [Reuse recorded resolution, record and reuse previous conflicts resolutions.](#reuse-recorded-resolution-record-and-reuse-previous-conflicts-resolutions)
 * [Open all conflicted files in an editor.](#open-all-conflicted-files-in-an-editor)
 * [Count unpacked number of objects and their disk consumption.](#count-unpacked-number-of-objects-and-their-disk-consumption)
@@ -153,6 +158,12 @@ P.S: All these commands are tested on `git version 2.7.4 (Apple Git-66)`.
 * [Get the repo name.](#get-the-repo-name)
 * [logs between date range](#logs-between-date-range)
 * [Exclude author from logs](#exclude-author-from-logs)
+* [Generates a summary of pending changes](#generates-a-summary-of-pending-changes)
+* [List references in a remote repository](#list-references-in-a-remote-repository)
+* [Backup untracked files.](#backup-untracked-files)
+* [List all git aliases](#list-all-git-aliases)
+* [Show git status short](#show-git-status-short)
+* [Checkout a commit prior to a day ago](#checkout-a-commit-prior-to-a-day-ago)
 
 <!-- Don’t remove or change the comment below – that can break automatic updates. More info at <http://npm.im/doxie.inject>. -->
 <!-- @doxie.inject end toc -->
@@ -170,9 +181,14 @@ git help everyday
 git help -g
 ```
 
-## Overwrite pull
+## Search change by content
 ```sh
-git fetch --all && git reset --hard origin/master
+git log -S'<a term in the source>'
+```
+
+## Sync with remote, overwrite local changes
+```sh
+git fetch origin && git reset --hard origin/master && git clean -f -d
 ```
 
 ## List of all files till a commit
@@ -224,6 +240,12 @@ git branch --merged master
 ## Quickly switch to the previous branch
 ```sh
 git checkout -
+```
+
+
+__Alternatives:__
+```sh
+git checkout @{-1}
 ```
 
 ## Remove branches that have already been merged with master
@@ -393,15 +415,57 @@ __Alternatives:__
 git stash save
 ```
 
-## Saving current state including untracked files
+## Saving current state of unstaged changes to tracked files
 ```sh
-git stash save -u
+git stash -k
 ```
 
 
 __Alternatives:__
 ```sh
+git stash --keep-index
+```
+
+
+```sh
+git stash save --keep-index
+```
+
+## Saving current state including untracked files
+```sh
+git stash -u
+```
+
+
+__Alternatives:__
+```sh
+git stash save -u
+```
+
+
+```sh
 git stash save --include-untracked
+```
+
+## Saving current state with message
+```sh
+git stash save <message>
+```
+
+## Saving current state of all files (ignored, untracked, and tracked)
+```sh
+git stash -a
+```
+
+
+__Alternatives:__
+```sh
+git stash --all
+```
+
+
+```sh
+git stash save --all
 ```
 
 ## Show list of all saved stashes
@@ -768,6 +832,17 @@ git status --ignored
 git log Branch1 ^Branch2
 ```
 
+## List n last commits
+```sh
+git log -<n>
+```
+
+
+__Alternatives:__
+```sh
+git log -n <n>
+```
+
 ## Reuse recorded resolution, record and reuse previous conflicts resolutions.
 ```sh
 git config --global rerere.enabled 1
@@ -1043,6 +1118,42 @@ git log --since='FEB 1 2017' --until='FEB 14 2017'
 ```sh
 git log --perl-regexp --author='^((?!excluded-author-regex).*)
 
+```
+
+## Generates a summary of pending changes
+```sh
+git request-pull v1.0 https://git.ko.xz/project master:for-linus
+```
+
+## List references in a remote repository
+```sh
+git ls-remote git://git.kernel.org/pub/scm/git/git.git
+```
+
+## Backup untracked files.
+```sh
+git ls-files --others -i --exclude-standard | xargs zip untracked.zip
+```
+
+## List all git aliases
+```sh
+git config -l | grep alias | sed 's/^alias\.//g'
+```
+
+
+__Alternatives:__
+```sh
+git config -l | grep alias | cut -d '.' -f 2
+```
+
+## Show git status short
+```sh
+git status --short --branch
+```
+
+## Checkout a commit prior to a day ago
+```sh
+git checkout master@{yesterday}
 ```
 
 <!-- Don’t remove or change the comment below – that can break automatic updates. More info at <http://npm.im/doxie.inject>. -->

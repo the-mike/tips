@@ -5,8 +5,11 @@
     "title": "Show helpful guides that come with Git",
     "tip": "git help -g"
 }, {
-    "title": "Overwrite pull",
-    "tip": "git fetch --all && git reset --hard origin/master"
+    "title": "Search change by content",
+    "tip": "git log -S'<a term in the source>'"
+}, {
+    "title": "Sync with remote, overwrite local changes",
+    "tip": "git fetch origin && git reset --hard origin/master && git clean -f -d"
 }, {
     "title": "List of all files till a commit",
     "tip": "git ls-tree --name-only -r <commit-ish>"
@@ -34,7 +37,8 @@
     "tip": "git branch --merged master"
 }, {
     "title": "Quickly switch to the previous branch",
-    "tip": "git checkout -"
+    "tip": "git checkout -",
+    "alternatives": ["git checkout @{-1}"]
 }, {
     "title": "Remove branches that have already been merged with master",
     "tip": "git branch --merged master | grep -v '^\\*' | xargs -n 1 git branch -d",
@@ -120,9 +124,20 @@
     "tip": "git stash",
     "alternatives": ["git stash save"]
 }, {
+    "title": "Saving current state of unstaged changes to tracked files",
+    "tip": "git stash -k",
+    "alternatives": ["git stash --keep-index", "git stash save --keep-index"]
+}, {
     "title": "Saving current state including untracked files",
-    "tip": "git stash save -u",
-    "alternatives": ["git stash save --include-untracked"]
+    "tip": "git stash -u",
+    "alternatives": ["git stash save -u", "git stash save --include-untracked"]
+}, {
+    "title": "Saving current state with message",
+    "tip": "git stash save <message>"
+}, {
+    "title": "Saving current state of all files (ignored, untracked, and tracked)",
+    "tip": "git stash -a",
+    "alternatives": ["git stash --all", "git stash save --all"]
 }, {
     "title": "Show list of all saved stashes",
     "tip": "git stash list"
@@ -300,6 +315,10 @@
     "title": "Commits in Branch1 that are not in Branch2",
     "tip": "git log Branch1 ^Branch2"
 }, {
+    "title": "List n last commits",
+    "tip": "git log -<n>",
+    "alternatives": ["git log -n <n>"]
+}, {
     "title": "Reuse recorded resolution, record and reuse previous conflicts resolutions.",
     "tip": "git config --global rerere.enabled 1"
 }, {
@@ -449,4 +468,25 @@
 }, {
    "title": "Exclude author from logs",
    "tip": "git log --perl-regexp --author='^((?!excluded-author-regex).*)$'"
-}]
+}, {
+    "title": "Generates a summary of pending changes",
+    "tip": "git request-pull v1.0 https://git.ko.xz/project master:for-linus"
+}, {
+    "title":"List references in a remote repository",
+    "tip": "git ls-remote git://git.kernel.org/pub/scm/git/git.git"
+}, {
+    "title": "Backup untracked files.",
+    "tip": "git ls-files --others -i --exclude-standard | xargs zip untracked.zip"
+}, {
+    "title": "List all git aliases",
+    "tip": "git config -l | grep alias | sed 's/^alias\\.//g'",
+    "alternatives": ["git config -l | grep alias | cut -d '.' -f 2"]
+},{
+    "title": "Show git status short",
+    "tip": "git status --short --branch"
+},
+ {
+     "title": "Checkout a commit prior to a day ago",
+     "tip": "git checkout master@{yesterday}"
+ }
+]
